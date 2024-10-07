@@ -41,7 +41,7 @@ async def invite(client, message):
 
 @Client.on_message(filters.command("start") & filters.incoming)
 async def start(client:Client, message):
-    await message.react(emoji=random.choice(REACTIONS), big=True)
+    await message.react(emoji=random.choice(REACTIONS))
     pm_mode = False
     try:
          data = message.command[1]
@@ -902,7 +902,11 @@ async def all_settings(client, message):
 
 🌀 ꜰꜱᴜʙ ᴄʜᴀɴɴᴇʟ ɪᴅ - /show_fsub
 
-📍 ᴛᴜᴛᴏʀɪᴀʟ ʟɪɴᴋ - {settings['tutorial']}
+📍1 ᴛᴜᴛᴏʀɪᴀʟ ʟɪɴᴋ - {settings['tutorial']}
+
+📍2 ᴛᴜᴛᴏʀɪᴀʟ ʟɪɴᴋ - {settings['tutorial_2']}
+
+📍3 ᴛᴜᴛᴏʀɪᴀʟ ʟɪɴᴋ - {settings['tutorial_3']}
 
 🎯 ɪᴍᴅʙ ᴛᴇᴍᴘʟᴀᴛᴇ - `{settings['template']}`
 
@@ -1042,6 +1046,27 @@ async def set_pm_search_off(client, message):
     await db.update_pm_search_status(bot_id, enable=False)
     await message.reply_text("<b><i>❌️ ᴘᴍ ꜱᴇᴀʀᴄʜ ᴅɪꜱᴀʙʟᴇᴅ, ꜰʀᴏᴍ ɴᴏᴡ ɴᴏ ᴏɴᴇ ᴄᴀɴ ᴀʙʟᴇ ᴛᴏ ꜱᴇᴀʀᴄʜ ᴍᴏᴠɪᴇ ɪɴ ʙᴏᴛ ᴘᴍ.</i></b>")
 
+
+@Client.on_message(filters.private & filters.command("movie_update_on"))
+async def set_send_movie_on(client, message):
+    user_id = message.from_user.id
+    bot_id = client.me.id
+    if user_id not in ADMINS:
+        await message.delete()
+        return    
+    await db.update_send_movie_update_status(bot_id, enable=True)
+    await message.reply_text("<b><i>✅️ ꜱᴇɴᴅ ᴍᴏᴠɪᴇ ᴜᴘᴅᴀᴛᴇ ᴇɴᴀʙʟᴇᴅ.</i></b>")
+
+@Client.on_message(filters.private & filters.command("movie_update_off"))
+async def set_send_movie_update_off(client, message):
+    user_id = message.from_user.id
+    bot_id = client.me.id
+    if user_id not in ADMINS:
+        await message.delete()
+        return    
+    await db.update_send_movie_update_status(bot_id, enable=False)
+    await message.reply_text("<b><i>❌️ ꜱᴇɴᴅ ᴍᴏᴠɪᴇ ᴜᴘᴅᴀᴛᴇ ᴅɪꜱᴀʙʟᴇᴅ.</i></b>")
+    
 @Client.on_message(filters.command("verify_id"))
 async def generate_verify_id(bot, message):
     if message.from_user.id not in ADMINS:
